@@ -1,0 +1,20 @@
+<div *ngIf="news" class="container">
+  <h2>{{ news.title }}</h2>
+  <p>By: {{ authorName }}</p>
+  <div class="body">{{ news.body }}</div>
+
+  <hr />
+  <h3>Comments</h3>
+  <div *ngFor="let comment of news.comments" class="comment">
+    <strong>{{ getUserName(comment.user_id) }}</strong>: {{ comment.text }}
+    <small>({{ comment.timestamp | date }})</small>
+  </div>
+
+  <div class="add-comment">
+    <h4>Add Comment</h4>
+    <textarea [(ngModel)]="newCommentText"></textarea>
+    <button (click)="addComment()" [disabled]="!newCommentText">
+      Post Comment
+    </button>
+  </div>
+</div>

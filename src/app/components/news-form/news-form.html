@@ -1,0 +1,38 @@
+<div class="container">
+  <h2>{{ isEdit ? 'Edit' : 'Create' }} News</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div>
+      <label>Title:</label>
+      <input
+        [(ngModel)]="newsData.title"
+        name="title"
+        required
+        #title="ngModel"
+      />
+      <div *ngIf="title.invalid && title.touched" style="color: red">
+        Title is required
+      </div>
+    </div>
+
+    <div>
+      <label>Body:</label>
+      <textarea
+        [(ngModel)]="newsData.body"
+        name="body"
+        required
+        minlength="20"
+        #body="ngModel"
+      ></textarea>
+      <div
+        *ngIf="body.errors?.['minlength'] && body.touched"
+        style="color: red"
+      >
+        Must be at least 20 chars
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="title.invalid || body.invalid">
+      Submit
+    </button>
+  </form>
+</div>

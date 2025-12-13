@@ -1,0 +1,16 @@
+.news-item {
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.actions a,
+.actions button {
+  margin-right: 10px;
+}

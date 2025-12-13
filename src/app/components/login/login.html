@@ -1,0 +1,10 @@
+<div class="container">
+  <h2>Login</h2>
+  <select title="User" [(ngModel)]="selectedUserId">
+    <option value="" disabled selected>Select User</option>
+    <option *ngFor="let user of users" [value]="user.id">
+      {{ user.name }}
+    </option>
+  </select>
+  <button (click)="onLogin()" [disabled]="!selectedUserId">Login</button>
+</div>

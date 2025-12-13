@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="header">
+    <span>Logged in as: <strong>{{ currentUser?.name }}</strong></span>
+    <a routerLink="/news/create" class="btn-create">Create News</a>
+  </div>
+
+  <input
+    type="text"
+    placeholder="Search by title..."
+    [(ngModel)]="searchTerm"
+    (input)="filterNews()"
+  />
+
+  <div *ngFor="let item of filteredNews" class="news-item">
+    <h3>{{ item.title }}</h3>
+    <p>Author: {{ getAuthorName(item.author_id) }}</p>
+    <p>Comments: {{ item.comments.length }}</p>
+    <div class="actions">
+      <a [routerLink]="['/news', item.id]">View Details</a>
+
+      <ng-container *ngIf="isAuthor(item.author_id)">
+        <a [routerLink]="['/news', item.id, 'edit']">Edit</a>
+        <button (click)="deleteNews(item.id)">Delete</button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+    <span>Page {{ currentPage }}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage * itemsPerPage >= allNews.length"
+    >
+      Next
+    </button>
+  </div>
+</div>
