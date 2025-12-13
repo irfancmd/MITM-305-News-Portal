@@ -1,38 +1,44 @@
 <div class="container">
   <div class="header">
     <span>Logged in as: <strong>{{ currentUser?.name }}</strong></span>
-    <a routerLink="/news/create" class="btn-create">Create News</a>
+    <button routerLink="/news/create" class="btn-create">Create News</button>
   </div>
 
-  <input
-    type="text"
-    placeholder="Search by title..."
-    [(ngModel)]="searchTerm"
-    (input)="filterNews()"
-  />
+  <h1 class="text-center">The Daily Planet</h1>
 
-  <div *ngFor="let item of filteredNews" class="news-item">
-    <h3>{{ item.title }}</h3>
-    <p>Author: {{ getAuthorName(item.author_id) }}</p>
-    <p>Comments: {{ item.comments.length }}</p>
-    <div class="actions">
-      <a [routerLink]="['/news', item.id]">View Details</a>
+  <div class="search-container">
+    <input
+      type="text"
+      placeholder="Search by title..."
+      [(ngModel)]="searchTerm"
+      (input)="filterNews()"
+    />
+  </div>
 
-      <ng-container *ngIf="isAuthor(item.author_id)">
-        <a [routerLink]="['/news', item.id, 'edit']">Edit</a>
-        <button (click)="deleteNews(item.id)">Delete</button>
-      </ng-container>
+  <div class="news-item-container">
+    <div *ngFor="let item of filteredNews" class="news-item">
+      <h3>{{ item.title }}</h3>
+      <p>Author: {{ getAuthorName(item.author_id) }}</p>
+      <p>Comments: {{ item.comments.length }}</p>
+      <div class="actions">
+        <button [routerLink]="['/news', item.id]">View Details</button>
+
+        <ng-container *ngIf="isAuthor(item.author_id)">
+          <button [routerLink]="['/news', item.id, 'edit']">Edit</button>
+          <button (click)="deleteNews(item.id)">Delete</button>
+        </ng-container>
+      </div>
     </div>
-  </div>
 
-  <div class="pagination">
-    <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
-    <span>Page {{ currentPage }}</span>
-    <button
-      (click)="nextPage()"
-      [disabled]="currentPage * itemsPerPage >= allNews.length"
-    >
-      Next
-    </button>
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+      <span>Page {{ currentPage }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage == totalPages"
+      >
+        Next
+      </button>
+    </div>
   </div>
 </div>

@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 export class NewsFormComponent implements OnInit {
   newsData = { title: '', body: '' };
   isEdit = false;
-  newsId!: number;
+  newsId!: string;
 
   constructor(
     private api: ApiService,
@@ -28,7 +28,7 @@ export class NewsFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
-      this.newsId = +id;
+      this.newsId = id;
       this.api.getNewsById(this.newsId).subscribe((data) => {
         if (data.author_id !== this.auth.getCurrentUser()?.id) {
           alert('You cannot edit this post.');

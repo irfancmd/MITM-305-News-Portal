@@ -5,6 +5,7 @@ import { News, User } from '../../models';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { setThrowInvalidWriteToSignalError } from '@angular/core/primitives/signals';
 
 @Component({
   selector: 'app-news-list',
@@ -14,7 +15,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./news-list.scss'],
 })
 export class NewsListComponent implements OnInit {
-  allNews: News[] = [];
+  newsItems: News[] = [];
   filteredNews: News[] = [];
   users: User[] = [];
   currentUser: User | null = null;
@@ -22,6 +23,7 @@ export class NewsListComponent implements OnInit {
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
+  totalPages: number = 1;
 
   constructor(private api: ApiService, public auth: AuthService) {}
 
@@ -34,44 +36,59 @@ export class NewsListComponent implements OnInit {
   }
 
   loadNews() {
-    this.api.getNews().subscribe((data) => {
-      this.allNews = data;
-      this.filterNews();
+    this.api.getNews(this.currentPage, this.itemsPerPage).subscribe((data) => {
+      this.newsItems = data.data;
+      this.totalPages = data.pages || 1;
+
+      this.filteredNews = this.newsItems;
     });
   }
 
   getAuthorName(id: number): string {
-    return this.users.find((u) => u.id === id)?.name || 'Unknown';
+    return this.users.find((u) => u.id == id)?.name || 'Unknown';
   }
 
   isAuthor(authorId: number): boolean {
-    return this.currentUser?.id === authorId;
+    return this.currentUser?.id == authorId;
   }
 
-  deleteNews(id: number) {
+  deleteNews(id: string) {
     if (confirm('Are you sure?')) {
       this.api.deleteNews(id).subscribe(() => this.loadNews());
     }
   }
 
   filterNews() {
-    let res = this.allNews;
-    if (this.searchTerm) {
-      res = res.filter((n) =>
-        n.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
+    if(!this.searchTerm) {
+      this.currentPage = 1;
+      this.itemsPerPage = 1;
+
+      this.loadNews();
+
+      return;
     }
 
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    this.filteredNews = res.slice(start, start + this.itemsPerPage);
+    this.api.getAllNews()
+    .subscribe((data) => {
+      this.newsItems = data;
+    });
+
+    this.filteredNews = this.newsItems.filter((n) =>
+      n.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+
+    this.currentPage = 1;
+    this.totalPages = 1;
   }
 
   nextPage() {
     this.currentPage++;
-    this.filterNews();
+
+    this.loadNews();
   }
   prevPage() {
     this.currentPage--;
-    this.filterNews();
+
+    this.loadNews();
   }
 }

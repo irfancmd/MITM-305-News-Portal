@@ -12,9 +12,14 @@ export interface Comment {
 }
 
 export interface News {
-  id: number;
+  id: string;
   title: string;
   body: string;
   author_id: number;
   comments: Comment[];
+}
+
+export interface PaginatedNews {
+  data: News[];
+  pages?: number;
 }

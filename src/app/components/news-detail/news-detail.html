@@ -12,7 +12,8 @@
 
   <div class="add-comment">
     <h4>Add Comment</h4>
-    <textarea [(ngModel)]="newCommentText"></textarea>
+    <textarea aria-label="Write a comment" [(ngModel)]="newCommentText"></textarea>
+    <br/>
     <button (click)="addComment()" [disabled]="!newCommentText">
       Post Comment
     </button>

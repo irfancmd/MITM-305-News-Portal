@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    const user = this.users.find((u) => u.id === +this.selectedUserId);
+    const user = this.users.find((u) => u.id == +this.selectedUserId);
+
     if (user) {
       this.auth.login(user);
       this.router.navigate(['/news']);

@@ -2,21 +2,28 @@
   <h2>{{ isEdit ? 'Edit' : 'Create' }} News</h2>
   <form (ngSubmit)="onSubmit()">
     <div>
-      <label>Title:</label>
+      <label>Title:&nbsp;</label>
       <input
+        aria-label="post-title"
         [(ngModel)]="newsData.title"
         name="title"
         required
         #title="ngModel"
       />
-      <div *ngIf="title.invalid && title.touched" style="color: red">
+      <div *ngIf="title.invalid && title.touched" class="text-error">
         Title is required
       </div>
     </div>
 
+    <br />
+
     <div>
       <label>Body:</label>
+      
+      <br />
+
       <textarea
+        aria-label="Post body"
         [(ngModel)]="newsData.body"
         name="body"
         required
@@ -25,7 +32,7 @@
       ></textarea>
       <div
         *ngIf="body.errors?.['minlength'] && body.touched"
-        style="color: red"
+        class="text-error"
       >
         Must be at least 20 chars
       </div>

@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './news-detail.html',
-  styleUrls: ['./news-detail.scss']
+  styleUrls: ['./news-detail.scss'],
 })
 export class NewsDetailComponent implements OnInit {
   news!: News;
@@ -28,11 +28,11 @@ export class NewsDetailComponent implements OnInit {
   ngOnInit() {
     this.api.getUsers().subscribe((u) => (this.users = u));
 
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id')!;
     this.loadNews(id);
   }
 
-  loadNews(id: number) {
+  loadNews(id: string) {
     this.api.getNewsById(id).subscribe((data) => {
       this.news = data;
       this.authorName = this.getUserName(data.author_id);
@@ -40,7 +40,7 @@ export class NewsDetailComponent implements OnInit {
   }
 
   getUserName(id: number): string {
-    return this.users.find((u) => u.id === id)?.name || 'Unknown';
+    return this.users.find((u) => u.id == id)?.name || 'Unknown';
   }
 
   addComment() {
