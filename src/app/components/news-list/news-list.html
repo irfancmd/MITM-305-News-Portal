@@ -1,7 +1,13 @@
 <div class="container">
   <div class="header">
     <span>Logged in as: <strong>{{ currentUser?.name }}</strong></span>
-    <button routerLink="/news/create" class="btn-create">Create News</button>
+
+    <div>
+      <button routerLink="/news/create" class="btn-create">Create News</button>
+      <button (click)="logout()" class="btn-logout" style="margin-left: 10px">
+        Log out
+      </button>
+    </div>
   </div>
 
   <h1 class="text-center">The Daily Planet</h1>
@@ -33,10 +39,7 @@
     <div class="pagination">
       <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
       <span>Page {{ currentPage }}</span>
-      <button
-        (click)="nextPage()"
-        [disabled]="currentPage == totalPages"
-      >
+      <button (click)="nextPage()" [disabled]="currentPage == totalPages">
         Next
       </button>
     </div>

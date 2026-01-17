@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const News = require("../models/News");
 const User = require("../models/User");
+const authenticate = require("../middleware/authenticate");
 
 router.get("/users", async (req, res) => {
   try {
@@ -81,8 +82,20 @@ router.patch("/news/:id", async (req, res) => {
   }
 });
 
-router.delete("/news/:id", async (req, res) => {
+router.delete("/news/:id", authenticate, async (req, res) => {
   try {
+    const news = await News.findOne({ id: req.params.id });
+
+    if (!news) {
+      return res.status(404).json({ message: "News not found" });
+    }
+
+    if (String(news.author_id) !== String(req.user.id)) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this news" });
+    }
+
     await News.findOneAndDelete({ id: req.params.id });
     res.json({ message: "Deleted" });
   } catch (err) {

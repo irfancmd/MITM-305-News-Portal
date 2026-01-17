@@ -16,7 +16,6 @@ export class AuthService {
       .post<{ user: User; token: string }>(`${this.apiUrl}/login`, userData)
       .pipe(
         map((response) => {
-          // Store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem(
             this.currentUserKey,
             JSON.stringify(response.user),
@@ -28,7 +27,6 @@ export class AuthService {
   }
 
   logout(): void {
-    // remove user from local storage to log user out
     localStorage.removeItem(this.currentUserKey);
     localStorage.removeItem(this.tokenKey);
   }

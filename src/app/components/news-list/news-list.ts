@@ -3,9 +3,8 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { News, User } from '../../models';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { setThrowInvalidWriteToSignalError } from '@angular/core/primitives/signals';
 
 @Component({
   selector: 'app-news-list',
@@ -25,7 +24,11 @@ export class NewsListComponent implements OnInit {
   itemsPerPage: number = 5;
   totalPages: number = 1;
 
-  constructor(private api: ApiService, public auth: AuthService) {}
+  constructor(
+    private api: ApiService,
+    public auth: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.currentUser = this.auth.getCurrentUser();
@@ -59,7 +62,7 @@ export class NewsListComponent implements OnInit {
   }
 
   filterNews() {
-    if(!this.searchTerm) {
+    if (!this.searchTerm) {
       this.currentPage = 1;
       this.itemsPerPage = 1;
 
@@ -68,13 +71,12 @@ export class NewsListComponent implements OnInit {
       return;
     }
 
-    this.api.getAllNews()
-    .subscribe((data) => {
+    this.api.getAllNews().subscribe((data) => {
       this.newsItems = data;
     });
 
     this.filteredNews = this.newsItems.filter((n) =>
-      n.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      n.title.toLowerCase().includes(this.searchTerm.toLowerCase()),
     );
 
     this.currentPage = 1;
@@ -86,9 +88,15 @@ export class NewsListComponent implements OnInit {
 
     this.loadNews();
   }
+
   prevPage() {
     this.currentPage--;
 
     this.loadNews();
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 }
