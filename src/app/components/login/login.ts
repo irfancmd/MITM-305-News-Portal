@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -32,8 +32,15 @@ export class LoginComponent implements OnInit {
     const user = this.users.find((u) => u.id == +this.selectedUserId);
 
     if (user) {
-      this.auth.login(user);
-      this.router.navigate(['/news']);
+      this.auth.login({ name: user.name, email: user.email }).subscribe({
+        next: () => {
+          this.router.navigate(['/news']);
+        },
+        error: (err) => {
+          console.error('Login failed', err);
+          alert('Login failed');
+        },
+      });
     }
   }
 }
